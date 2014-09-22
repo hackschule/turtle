@@ -3,9 +3,27 @@
 <script src='js/turtle.js'></script>
 <script>
 
+function r(l, level)
+{
+    l /= 5.4;
+    var l2 = l;
+    if (level > 0) r(l2, level - 1); else forward(l);
+    left(45);
+    for (var i = 0; i < 3; i++)
+    {
+        if (level > 0) r(l2, level - 1); else forward(l);
+        right(30);
+    }
+    if (level > 0) r(l2, level - 1); else forward(l);
+    left(45);
+    if (level > 0) r(l2, level - 1); else forward(l);
+}
+
 function main()
 {
     // Hier kannst du loslegen!
+    setpos(350, 50, 90);
+    r(600, 3);
 }
 
 </script>
