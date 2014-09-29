@@ -88,6 +88,27 @@ function loadScript(url, callback)
     head.appendChild(script);
 }
 
+function parseColorToHtml(r, g, b)
+{
+    var xr = r.toString(16);
+    var xg = g.toString(16);
+    var xb = b.toString(16);
+    if (xr.length < 2) xr = '0' + xr;
+    if (xg.length < 2) xg = '0' + xg;
+    if (xb.length < 2) xb = '0' + xb;
+    return '#' + xr + xg + xg;
+}
+
+function clear(r, g, b)
+{
+    fillRect(0, 0, 10000, 10000, parseColorToHtml(r, g, b));
+}
+
+function color(r, g, b)
+{
+    window.imageContext.strokeStyle = parseColorToHtml(r, g, b);
+}
+
 loadScript('js/jquery-1.7.1.min.js', function() {
     $('body').css('padding', '0');
     $('body').css('margin', '0');
