@@ -96,7 +96,7 @@ function parseColorToHtml(r, g, b)
     if (xr.length < 2) xr = '0' + xr;
     if (xg.length < 2) xg = '0' + xg;
     if (xb.length < 2) xb = '0' + xb;
-    return '#' + xr + xg + xg;
+    return '#' + xr + xg + xb;
 }
 
 function clear(r, g, b)
