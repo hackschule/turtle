@@ -120,5 +120,9 @@ loadScript('js/jquery-1.7.1.min.js', function() {
     window.onerror = function(msg, url, line) {
         console.log(msg, url, line);
     };
-    main();
+    try {
+        main();
+    } catch (e) {
+        alert('Fehler: ' + e.message);
+    }
 });
