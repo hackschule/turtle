@@ -120,9 +120,21 @@ loadScript('js/jquery-1.7.1.min.js', function() {
     window.onerror = function(msg, url, line) {
         console.log(msg, url, line);
     };
-    try {
-        main();
-    } catch (e) {
-        alert('Fehler: ' + e.message);
+    if (typeof(animate) === 'function')
+    {
+        function _loop(time)
+        {
+            animate(time / 1000.0);
+            requestAnimationFrame(_loop);
+        }
+        requestAnimationFrame(_loop);
+    }
+    else
+    {
+        try {
+            main();
+        } catch (e) {
+            alert('Fehler: ' + e.message);
+        }
     }
 });
