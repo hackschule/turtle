@@ -124,6 +124,13 @@ loadScript('js/jquery-1.7.1.min.js', function() {
     {
         function _loop(time)
         {
+            window.turtle_x = 350.0;
+            window.turtle_y = 350.0;
+            window.turtle_phi = Math.PI * 0.5;
+            window.turtle_down = true;
+            fillRect(0, 0, 10000, 10000, '#000040');
+            window.imageContext.lineWidth = 1.5;
+            window.imageContext.strokeStyle = '#ffffff';
             animate(time / 1000.0);
             requestAnimationFrame(_loop);
         }
