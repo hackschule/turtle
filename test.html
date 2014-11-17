@@ -3,83 +3,11 @@
 <script src='js/turtle.js'></script>
 <script>
 
-function stern(l)
-{
-    for (var i = 0; i < 5; i++)
-    {
-        forward(l);
-        left(144);
-    }
-}
-
-function kreis()
-{
-    for (var i = 0; i < 360; i++)
-    {
-        forward(1.5);
-        left(1);
-    }
-}
-
-function spirale(t)
-{
-    for (var i = 0; i < t; i++)
-    {
-        forward(Math.abs(Math.atan(i / 20.0)) * 1.0);
-        left(i / 7 - Math.abs(Math.sin(i / 30.0)));
-    }
-}
+// Hier kannst du loslegen!
 
 function main()
 {
-    clear(255, 255, 255);
-    setpos(350, 650, 90);
-    color(64, 64, 64);
-    left(45);
-    spirale(58000.0);
 }
-
-// function animate(t)
-// {
-//     clear(255, 255, 255);
-//     setpos(350, 650, 90);
-//     color(64, 64, 64);
-//     left(45);
-//     spirale(t * 2000.0);
-// }
-
-function leaf(length, a, b, c)
-{
-    forward(length + (b + 1));
-    if (length > 1)
-    {
-        push();
-        left(50 + a * 2);
-        leaf(length * 0.4, a, b, c);
-        pop();
-
-        push();
-        left(10 + b * 1);
-        leaf(length * 0.6, a, b, c);
-        pop();
-
-        right(50 + c * 1);
-        leaf(length * 0.3, a, b, c);
-    }
-}
-
-// function animate(t)
-// {
-//     clear(0, 0, 64);
-//     
-//     setpos(350, 50, 90);
-//     leaf(250, Math.sin(t), Math.sin(t + 1), Math.sin(t + 2));
-//     setpos(550, 50, 90);
-//     right(10);
-//     leaf(150, Math.sin(t + 1), Math.sin(t + 2), Math.sin(t + 3));
-//     setpos(150, 50, 90);
-//     leaf(100, Math.sin(t + 2), Math.sin(t + 3), Math.sin(t + 4));
-// }
 
 </script>
 </head>
