@@ -8,9 +8,12 @@ function initCanvas()
     window.turtle_phi = Math.PI * 0.5;
     window.turtle_down = true;
     window.turtle_stack = [];
-    fillRect(0, 0, 10000, 10000, '#000040');
+    window.background_color = [0, 0x10, 0x40];
+    fillRect(0, 0, 700, 700, '#001040');
     window.imageContext.lineWidth = 1.5;
     window.imageContext.strokeStyle = '#ffffff';
+    if (typeof(window.let_it_snow) === 'undefined')
+        window.let_it_snow = false;
 }
 
 function fillRect(x0, y0, x1, y1, color)
@@ -101,12 +104,19 @@ function parseColorToHtml(r, g, b)
 
 function clear(r, g, b)
 {
+    window.background_color = [r, g, b];
     fillRect(0, 0, 10000, 10000, parseColorToHtml(r, g, b));
 }
 
 function color(r, g, b)
 {
     window.imageContext.strokeStyle = parseColorToHtml(r, g, b);
+}
+
+function snow(count)
+{
+    window.let_it_snow = true;
+    window.snowflake_count = count;
 }
 
 loadScript('js/jquery-1.7.1.min.js', function() {
@@ -122,6 +132,7 @@ loadScript('js/jquery-1.7.1.min.js', function() {
     };
     if (typeof(animate) === 'function')
     {
+        animate(0);
         function _loop(time)
         {
             window.turtle_x = 350.0;
@@ -134,7 +145,8 @@ loadScript('js/jquery-1.7.1.min.js', function() {
             animate(time / 1000.0);
             requestAnimationFrame(_loop);
         }
-        requestAnimationFrame(_loop);
+        if (!window.let_it_snow)
+            requestAnimationFrame(_loop);
     }
     else
     {
@@ -143,5 +155,99 @@ loadScript('js/jquery-1.7.1.min.js', function() {
         } catch (e) {
             alert('Fehler: ' + e.message);
         }
+    }
+    
+    function _bg_at_pixel(data, x, y)
+    {
+        if (x < 0 || x >= 700 || y < 0 || y >= 700)
+            return true;
+        
+        var pixel = [];
+        pixel.push(data.data[(y * 700 + x) * 4 + 0]);
+        pixel.push(data.data[(y * 700 + x) * 4 + 1]);
+        pixel.push(data.data[(y * 700 + x) * 4 + 2]);
+        return (pixel[0] == window.background_color[0] && 
+                pixel[1] == window.background_color[1] &&
+                pixel[2] == window.background_color[2]);
+    }
+    
+    function _snow_loop(time)
+    {
+        var data = window.imageContext.getImageData(0, 0, 700, 700);
+        
+        for (var i = 0; i < particles.length; i++)
+        {
+            var x = Math.floor(particles[i][0]);
+            var y = Math.floor(particles[i][1]);
+            data.data[(y * 700 + x) * 4 + 0] = window.background_color[0];
+            data.data[(y * 700 + x) * 4 + 1] = window.background_color[1];
+            data.data[(y * 700 + x) * 4 + 2] = window.background_color[2];
+            data.data[(y * 700 + x) * 4 + 3] = 255;
+            
+        }
+        for (var i = 0; i < particles.length; i++)
+        {
+            var k = (i % 10) * 128 / 9 + 127;
+            var j = (i % 10) / 2;
+            
+            var old_x = Math.floor(particles[i][0]);
+            var old_y = Math.floor(particles[i][1]);
+            
+            particles[i][0] += (Math.random() - 0.5) * 2;
+            particles[i][1] += (Math.random() * 0.5 + j + 1) / 2;
+            if (particles[i][1] > 700)
+                particles[i] = [Math.random() * 700, 0];
+            
+            var x = Math.floor(particles[i][0]);
+            var y = Math.floor(particles[i][1]);
+            if (!_bg_at_pixel(data, x, y))
+            {
+                x = old_x;
+                y = old_y;
+                if (_bg_at_pixel(data, x, y + 1))
+                {
+                    particles[i][0] = x;
+                    particles[i][1] = y + 1;
+                }
+                else if (_bg_at_pixel(data, x - 1, y + 1))
+                {
+                    particles[i][0] = x - 1;
+                    particles[i][1] = y + 1;
+                }
+                else if (_bg_at_pixel(data, x + 1, y + 1))
+                {
+                    particles[i][0] = x + 1;
+                    particles[i][1] = y + 1;
+                }
+                else
+                {
+                    particles[i] = [Math.random() * 700, 0];
+                    data.data[(y * 700 + x) * 4 + 0] = k;
+                    data.data[(y * 700 + x) * 4 + 1] = k;
+                    data.data[(y * 700 + x) * 4 + 2] = k;
+                    data.data[(y * 700 + x) * 4 + 3] = 255;
+                }
+            }
+        }
+        for (var i = 0; i < particles.length; i++)
+        {
+            var k = (i % 10) * 128 / 9 + 127;
+            var x = Math.floor(particles[i][0]);
+            var y = Math.floor(particles[i][1]);
+            data.data[(y * 700 + x) * 4 + 0] = k;
+            data.data[(y * 700 + x) * 4 + 1] = k;
+            data.data[(y * 700 + x) * 4 + 2] = k;
+        }
+        
+        window.imageContext.putImageData(data, 0, 0);
+        requestAnimationFrame(_snow_loop);
+    }
+    
+    if (window.let_it_snow)
+    {
+        window.particles = [];
+        for (var i = 0; i < window.snowflake_count; i++)
+            window.particles.push([Math.random() * 700, Math.random() * 700]);
+        requestAnimationFrame(_snow_loop);
     }
 });
